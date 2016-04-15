@@ -1,0 +1,383 @@
+---
+title: "Assignment"
+author: "Antoine Foti"
+date: "April 15, 2016"
+output: html_document
+---
+
+## Loading necessary libraries
+
+```{r}
+library(RWeka)
+```
+
+Loading the 'Sonar' dataset:
+
+```{r}
+data.sonar <- read.csv('sonar.all-data', header = FALSE)
+glimpse(data.sonar)
+View(data.sonar)
+```
+
+Column V61 (last column) is the class attribute.
+
+## The C4.5 classifier:
+
+```{r}
+c4.5 <- J48(V61~., data=data.sonar)
+summary(c4.5)
+summary(c4.5)$confusionMatrix
+
+TP <- summary(c4.5)$confusionMatrix[1,1]
+TN <- summary(c4.5)$confusionMatrix[2,2]
+
+FP <- summary(c4.5)$confusionMatrix[2,1]
+FN <- summary(c4.5)$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+Now testing the C4.5 classifier using 10-fold cross-validation:
+
+```{r}
+c4.5.10fold <- evaluate_Weka_classifier(c4.5, numFolds = 10)
+c4.5.10fold
+c4.5.10fold$confusionMatrix
+
+TP <- c4.5.10fold$confusionMatrix[1,1]
+TN <- c4.5.10fold$confusionMatrix[2,2]
+
+FP <- c4.5.10fold$confusionMatrix[2,1]
+FN <- c4.5.10fold$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+##Now let's try using Random Forest algorithm:
+
+```{r}
+random_forest <- make_Weka_classifier("weka/classifiers/trees/RandomForest")
+random.forest <- random_forest(V61~., data=data.sonar)
+summary(random.forest)
+summary(random.forest)$confusionMatrix
+
+TP <- summary(random.forest)$confusionMatrix[1,1]
+TN <- summary(random.forest)$confusionMatrix[2,2]
+
+FP <- summary(random.forest)$confusionMatrix[2,1]
+FN <- summary(random.forest)$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+Now testing the classifier using 10-fold cross-validation:
+
+```{r}
+random.forest.10fold <- evaluate_Weka_classifier(random.forest, numFolds = 10)
+random.forest.10fold
+random.forest.10fold$confusionMatrix
+
+TP <- random.forest.10fold$confusionMatrix[1,1]
+TN <- random.forest.10fold$confusionMatrix[2,2]
+
+FP <- random.forest.10fold$confusionMatrix[2,1]
+FN <- random.forest.10fold$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+## Now let's try using Support Vector Machine algorithm:
+
+```{r}
+svm <- SMO(V61~., data=data.sonar)
+summary(svm)
+summary(svm)$confusionMatrix
+
+TP <- summary(svm)$confusionMatrix[1,1]
+TN <- summary(svm)$confusionMatrix[2,2]
+
+FP <- summary(svm)$confusionMatrix[2,1]
+FN <- summary(svm)$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+Now testing the classifier using 10-fold cross-validation:
+
+```{r}
+svm.10fold <- evaluate_Weka_classifier(svm, numFolds = 10)
+svm.10fold
+svm.10fold$confusionMatrix
+
+TP <- svm.10fold$confusionMatrix[1,1]
+TN <- svm.10fold$confusionMatrix[2,2]
+
+FP <- svm.10fold$confusionMatrix[2,1]
+FN <- svm.10fold$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+## Now let's try using Naive Bayes algorithm:
+
+```{r}
+naive_bayes <- make_Weka_classifier("weka/classifiers/bayes/NaiveBayes")
+naive.bayes <- naive_bayes(V61~., data=data.sonar)
+summary(naive.bayes)
+summary(naive.bayes)$confusionMatrix
+
+TP <- summary(naive.bayes)$confusionMatrix[1,1]
+TN <- summary(naive.bayes)$confusionMatrix[2,2]
+
+FP <- summary(naive.bayes)$confusionMatrix[2,1]
+FN <- summary(naive.bayes)$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+Now testing the classifier using 10-fold cross-validation:
+
+```{r}
+naive.bayes.10fold <- evaluate_Weka_classifier(naive.bayes, numFolds = 10)
+naive.bayes.10fold
+naive.bayes.10fold$confusionMatrix
+
+TP <- naive.bayes.10fold$confusionMatrix[1,1]
+TN <- naive.bayes.10fold$confusionMatrix[2,2]
+
+FP <- naive.bayes.10fold$confusionMatrix[2,1]
+FN <- naive.bayes.10fold$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+## Now let's try using the Neural Networks Multi-Layer Perceptron:
+
+```{r}
+neural_network <- make_Weka_classifier("weka/classifiers/functions/MultilayerPerceptron")
+neural.network <- neural_network(V61~., data=data.sonar)
+summary(neural.network)
+summary(neural.network)$confusionMatrix
+
+TP <- summary(neural.network)$confusionMatrix[1,1]
+TN <- summary(neural.network)$confusionMatrix[2,2]
+
+FP <- summary(neural.network)$confusionMatrix[2,1]
+FN <- summary(neural.network)$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+Now testing the classifier using 10-fold cross-validation:
+
+```{r}
+neural.network.10fold <- evaluate_Weka_classifier(neural.network, numFolds = 10)
+neural.network.10fold
+neural.network.10fold$confusionMatrix
+
+TP <- neural.network.10fold$confusionMatrix[1,1]
+TN <- neural.network.10fold$confusionMatrix[2,2]
+
+FP <- neural.network.10fold$confusionMatrix[2,1]
+FN <- neural.network.10fold$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+## Now let's try Bagging:
+
+```{r}
+bagging <- Bagging(formula(V61~.), data=data.sonar, control=Weka_control(W="weka.classifiers.trees.J48"))
+summary(bagging)
+summary(bagging)$confusionMatrix
+
+TP <- summary(bagging)$confusionMatrix[1,1]
+TN <- summary(bagging)$confusionMatrix[2,2]
+
+FP <- summary(bagging)$confusionMatrix[2,1]
+FN <- summary(bagging)$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+Now testing the classifier using 10-fold cross-validation:
+
+```{r}
+bagging.10fold <- evaluate_Weka_classifier(bagging, numFolds = 10)
+bagging.10fold
+bagging.10fold$confusionMatrix
+
+TP <- bagging.10fold$confusionMatrix[1,1]
+TN <- bagging.10fold$confusionMatrix[2,2]
+
+FP <- bagging.10fold$confusionMatrix[2,1]
+FN <- bagging.10fold$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+## Now let's try Boosting:
+
+```{r}
+boosting <- AdaBoostM1(V61~., data=data.sonar)
+summary(boosting)
+summary(boosting)$confusionMatrix
+
+TP <- summary(boosting)$confusionMatrix[1,1]
+TN <- summary(boosting)$confusionMatrix[2,2]
+
+FP <- summary(boosting)$confusionMatrix[2,1]
+FN <- summary(boosting)$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+Now testing the classifier using 10-fold cross-validation:
+
+```{r}
+boosting.10fold <- evaluate_Weka_classifier(boosting, numFolds = 10)
+boosting.10fold
+boosting.10fold$confusionMatrix
+
+TP <- boosting.10fold$confusionMatrix[1,1]
+TN <- boosting.10fold$confusionMatrix[2,2]
+
+FP <- boosting.10fold$confusionMatrix[2,1]
+FN <- boosting.10fold$confusionMatrix[1,2]
+
+accuracy <- (TP+TN)/(TP+TN+FP+FN)
+accuracy
+precision <- TP/(TP+FP)
+precision
+recall <- TP/(TP+FN)
+recall
+fscore <- 2*(precision*recall/(precision+recall))
+fscore
+```
+
+## Working on the other datasets:
+
+### Hepatitis
+
+```{r}
+data.hepatitis <- read.csv("hepatitis.data", header = FALSE)
+glimpse(data.hepatitis)
+View(data.hepatitis)
+```
+
+### Spect
+
+Train data:
+
+```{r}
+data.spect.train <- read.csv("SPECT.train", header = FALSE)
+glimpse(data.spect.train)
+View(data.spect.train)
+```
+
+Test data:
+
+```{r}
+data.spect.test <- read.csv("SPECT.test", header = FALSE)
+glimpse(data.spect.test)
+View(data.spect.test)
+```
+
+###Pima-indians
+
+```{r}
+data.pimaindians <- read.csv("pima-indians-diabetes.data", header = FALSE)
+glimpse(data.pimaindians)
+View(data.pimaindians)
+```
